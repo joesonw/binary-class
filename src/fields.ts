@@ -58,6 +58,11 @@ export interface Meta { // eslint-disable-line @typescript-eslint/interface-name
     fixed?: {
         value: any;
     };
+    peekCheck?: {
+        length: number;
+        decode: (bytes: number[]) => PropertyDecorator;
+        encode: (target: any) => PropertyDecorator;
+    };
 }
 
 export function addMeta(target: object, newMeta: Meta): void {
@@ -75,6 +80,12 @@ export type Field = PropertyDecorator;
 export function Calculated<T>(decode: (target: T) => any, encode: (value: number, target: T) => void): PropertyDecorator {
     return (target: object, key: string | symbol): void => {
         addMeta(target as any, { key, type: 'calculated', calculated: { decode, encode } });
+    };
+}
+
+export function PeekCheck(length: number, decode: (bytes: number[]) => PropertyDecorator, encode: (target: any) => PropertyDecorator): PropertyDecorator {
+    return (target: object, key: string | symbol): void => {
+        addMeta(target as any, { key, type: 'peekCheck', peekCheck: { length, encode, decode } });
     };
 }
 

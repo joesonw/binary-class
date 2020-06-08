@@ -6,8 +6,7 @@ import {
 import {
     ByteOrder,
 } from './consts';
-
-const TEMPORARY = Symbol('temporary');
+import getMetaFromField from './getMetaFromField';
 
 export function encodeItem(target: any, value: any, meta: Meta): Buffer {
     switch (meta.type) {
@@ -101,15 +100,10 @@ export function encodeItem(target: any, value: any, meta: Meta): Buffer {
     case 'dynamic': {
         const field = meta.dynamic.func(target);
         if (!field) return undefined;
-        const dynamic = {};
-        field(dynamic, TEMPORARY);
-        const dynamicMeta = getMeta(dynamic)[0];
-        return encodeItem(target, value, dynamicMeta);
+        return encodeItem(target, value, getMetaFromField(meta.key, field));
     }
     case 'array': {
-        const array = {};
-        meta.array.field(array, TEMPORARY);
-        const arrayMeta = getMeta(array)[0];
+        const arrayMeta = getMetaFromField(meta.key, meta.array.field);
         const buffers: Buffer[] = [];
         for (let i = 0; i < meta.array.length; i++) {
             const buf = encodeItem(target, value[i], arrayMeta);
@@ -135,6 +129,11 @@ export function encodeItem(target: any, value: any, meta: Meta): Buffer {
     case 'fixed': {
         if (value !== meta.fixed.value) throw new Error(`Should be fixed value: ${meta.fixed.value}`);
         return undefined;
+    }
+    case 'peekCheck': {
+        const field = meta.peekCheck.encode(target);
+        if (!field) return undefined;
+        return encodeItem(target, value, getMetaFromField(meta.key, field));
     }
     }
 }

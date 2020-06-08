@@ -6,8 +6,7 @@ import {
 import {
     ByteOrder,
 } from './consts';
-
-const TEMPORARY: symbol = Symbol('temporary');
+import getMetaFromField from './getMetaFromField';
 
 export function decodeItem(target: any, buffer: Buffer, meta: Meta, offset: number): { result: any, length: number } {
     switch (meta.type) {
@@ -65,15 +64,10 @@ export function decodeItem(target: any, buffer: Buffer, meta: Meta, offset: numb
     case 'dynamic': {
         const field = meta.dynamic.func(target);
         if (!field) return undefined;
-        const dynamic = {};
-        field(dynamic, TEMPORARY);
-        const dynamicMeta = getMeta(dynamic)[0];
-        return decodeItem(target, buffer, dynamicMeta, offset);
+        return decodeItem(target, buffer, getMetaFromField(meta.key, field), offset);
     }
     case 'array': {
-        const array = {};
-        meta.array.field(array, TEMPORARY);
-        const arrayMeta = getMeta(array)[0];
+        const arrayMeta = getMetaFromField(meta.key, meta.array.field);
         let length = 0;
         const result : any[] = [];
         for (let i = 0; i < meta.array.length; i++) {
@@ -103,6 +97,15 @@ export function decodeItem(target: any, buffer: Buffer, meta: Meta, offset: numb
     case 'fixed': {
         if (target[meta.key] !== meta.fixed.value) throw new Error(`Should be fixed value: ${meta.fixed.value}`);
         return undefined;
+    }
+    case 'peekCheck': {
+        const bytes: number[] = [];
+        for (let i = 0; i < meta.peekCheck.length; i++) {
+            bytes.push(buffer.readUInt8(offset + i));
+        }
+        const field = meta.peekCheck.decode(bytes);
+        if (!field) return undefined;
+        return decodeItem(target, buffer, getMetaFromField(meta.key, field), offset);
     }
     }
 }

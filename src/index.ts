@@ -15,6 +15,7 @@ import {
     Embed,
     Calculated,
     Fixed,
+    PeekCheck,
 } from './fields';
 
 import {
@@ -44,4 +45,5 @@ export {
     Double,
     decode,
     encode,
+    PeekCheck,
 };
