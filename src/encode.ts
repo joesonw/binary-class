@@ -7,8 +7,7 @@ import {
     ByteOrder,
 } from './consts';
 
-const DYNAMIC = Symbol('dynamic');
-const ARRAY = Symbol('array');
+const TEMPORARY = Symbol('temporary');
 
 export function encodeItem(target: any, value: any, meta: Meta): Buffer {
     switch (meta.type) {
@@ -100,14 +99,16 @@ export function encodeItem(target: any, value: any, meta: Meta): Buffer {
         return b;
     }
     case 'dynamic': {
+        const field = meta.dynamic.func(target);
+        if (!field) return undefined;
         const dynamic = {};
-        meta.dynamic.func(target)(dynamic, DYNAMIC);
+        field(dynamic, TEMPORARY);
         const dynamicMeta = getMeta(dynamic)[0];
         return encodeItem(target, value, dynamicMeta);
     }
     case 'array': {
         const array = {};
-        meta.array.field(array, ARRAY);
+        meta.array.field(array, TEMPORARY);
         const arrayMeta = getMeta(array)[0];
         const buffers: Buffer[] = [];
         for (let i = 0; i < meta.array.length; i++) {
@@ -132,7 +133,9 @@ export function encodeItem(target: any, value: any, meta: Meta): Buffer {
 function encodeWithMetas(target: any, metas: Meta[]): Buffer { // eslint-disable-line @typescript-eslint/no-explicit-any
     const buffers: Buffer[] = [];
     for (const meta of metas) {
-        buffers.push(encodeItem(target, target[meta.key], meta));
+        const buffer = encodeItem(target, target[meta.key], meta);
+        if (!buffer) continue;
+        buffers.push(buffer);
     }
     const buffer = Buffer.alloc(buffers.reduce((sum: number, b: Buffer) => sum + b.byteLength, 0));
     let offset = 0;

@@ -50,7 +50,7 @@ export interface Meta { // eslint-disable-line @typescript-eslint/interface-name
     array?: {
         length: number;
         field: PropertyDecorator,
-    }
+    };
 }
 
 export function addMeta(target: object, newMeta: Meta): void {

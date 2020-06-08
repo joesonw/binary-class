@@ -1,11 +1,12 @@
 {
   "name": "binary-class",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "binary encoder/decoder",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "scripts": {
     "build": "tsc -p tsconfig.json",
+    "prepublish": "yarn run build",
     "lint": "eslint './src/**/*.ts?(x)'"
   },
   "repository": {

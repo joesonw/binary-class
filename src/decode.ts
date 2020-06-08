@@ -7,8 +7,7 @@ import {
     ByteOrder,
 } from './consts';
 
-const DYNAMIC: symbol = Symbol('dynamic');
-const ARRAY: symbol = Symbol('array');
+const TEMPORARY: symbol = Symbol('temporary');
 
 export function decodeItem(target: any, buffer: Buffer, meta: Meta, offset: number): { result: any, length: number } {
     switch (meta.type) {
@@ -64,14 +63,16 @@ export function decodeItem(target: any, buffer: Buffer, meta: Meta, offset: numb
         }
         return { result: buffer.readDoubleBE(offset), length: 8 };
     case 'dynamic': {
+        const field = meta.dynamic.func(target);
+        if (!field) return undefined;
         const dynamic = {};
-        meta.dynamic.func(target)(dynamic, DYNAMIC);
+        field(dynamic, TEMPORARY);
         const dynamicMeta = getMeta(dynamic)[0];
         return decodeItem(target, buffer, dynamicMeta, offset);
     }
     case 'array': {
         const array = {};
-        meta.array.field(array, ARRAY);
+        meta.array.field(array, TEMPORARY);
         const arrayMeta = getMeta(array)[0];
         let length = 0;
         const result : any[] = [];
@@ -101,9 +102,10 @@ export default function decode<T>(buffer: Buffer, target: T): T {
     const allMeta = getMeta(target as any);
     let offset = 0;
     for (const meta of allMeta) {
-        const { result, length } = decodeItem(target, buffer, meta, offset);
-        offset += length;
-        target[meta.key] = result;
+        const res = decodeItem(target, buffer, meta, offset);
+        if (!res) continue;
+        offset += res.length;
+        target[meta.key] = res.result;
     }
     return target;
 }
