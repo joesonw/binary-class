@@ -91,25 +91,25 @@ export function String(length: number, encoding: BufferEncoding = 'utf8'): Prope
     };
 }
 
-export function Uint8(): PropertyDecorator {
+export function UInt8(): PropertyDecorator {
     return (target: object, key: string | symbol): void => {
         addMeta(target, { key, type: 'uint8', uint8: { } });
     };
 }
 
-export function Uint16(endian: ByteOrder = ByteOrder.LITTLE_ENDING): PropertyDecorator {
+export function UInt16(endian: ByteOrder = ByteOrder.LITTLE_ENDING): PropertyDecorator {
     return (target: object, key: string | symbol): void => {
         addMeta(target, { key, type: 'uint16', uint16: { endian } });
     };
 }
 
-export function Uint32(endian: ByteOrder = ByteOrder.LITTLE_ENDING): PropertyDecorator {
+export function UInt32(endian: ByteOrder = ByteOrder.LITTLE_ENDING): PropertyDecorator {
     return (target: object, key: string | symbol): void => {
         addMeta(target, { key, type: 'uint32', uint32: { endian } });
     };
 }
 
-export function Uint64(endian: ByteOrder = ByteOrder.LITTLE_ENDING): PropertyDecorator {
+export function UInt64(endian: ByteOrder = ByteOrder.LITTLE_ENDING): PropertyDecorator {
     return (target: object, key: string | symbol): void => {
         addMeta(target, { key, type: 'uint64', uint64: { endian } });
     };
