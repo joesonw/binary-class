@@ -15,10 +15,15 @@ import {
     Embed,
 } from './fields';
 
+import {
+    ByteOrder,
+} from './consts';
+
 import decode from './decode';
 import encode from './encode';
 
 export {
+    ByteOrder,
     Dynamic,
     Embed,
     Array,
