@@ -69,7 +69,7 @@ export function getMeta(target: object): Meta[] {
 
 export type Field = PropertyDecorator;
 
-export function Calculated(decode: (target: any) => any, encode: (value: number, target: any) => void): PropertyDecorator {
+export function Calculated<T>(decode: (target: T) => any, encode: (value: number, target: T) => void): PropertyDecorator {
     return (target: object, key: string | symbol): void => {
         addMeta(target as any, { key, type: 'Calculated', calculated: { decode, encode } });
     };

@@ -78,6 +78,7 @@ export function decodeItem(target: any, buffer: Buffer, meta: Meta, offset: numb
         const result : any[] = [];
         for (let i = 0; i < meta.array.length; i++) {
             const res = decodeItem(target, buffer, arrayMeta, offset + length);
+            if (!res) continue;
             result.push(res.result);
             length += res.length;
         }
@@ -90,6 +91,7 @@ export function decodeItem(target: any, buffer: Buffer, meta: Meta, offset: numb
         let length = 0;
         for (const meta of metas) {
             const res = decodeItem(result, buffer, meta, offset + length);
+            if (!res) continue;
             result[meta.key] = res.result;
             length += res.length;
         }

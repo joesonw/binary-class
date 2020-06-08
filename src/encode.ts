@@ -119,6 +119,7 @@ export function encodeItem(target: any, value: any, meta: Meta): Buffer {
         const buffer = Buffer.alloc(buffers.reduce((sum: number, b: Buffer) => sum + b.byteLength, 0));
         let offset = 0;
         for (const b of buffers) {
+            if (!b) continue;
             b.copy(buffer, offset);
             offset += b.byteLength;
         }
