@@ -55,6 +55,9 @@ export interface Meta { // eslint-disable-line @typescript-eslint/interface-name
         decode: (target: any) => any;
         encode: (value: number, target: any) => void;
     };
+    fixed?: {
+        value: any;
+    };
 }
 
 export function addMeta(target: object, newMeta: Meta): void {
@@ -72,6 +75,12 @@ export type Field = PropertyDecorator;
 export function Calculated<T>(decode: (target: T) => any, encode: (value: number, target: T) => void): PropertyDecorator {
     return (target: object, key: string | symbol): void => {
         addMeta(target as any, { key, type: 'calculated', calculated: { decode, encode } });
+    };
+}
+
+export function Fixed<T = any>(value: any): PropertyDecorator {
+    return (target: T, key: string | symbol): void => {
+        addMeta(target as any, { key, type: 'fixed', fixed: { value } });
     };
 }
 

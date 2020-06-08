@@ -14,6 +14,7 @@ import {
     Array,
     Embed,
     Calculated,
+    Fixed,
 } from './fields';
 
 import {
@@ -25,6 +26,7 @@ import encode from './encode';
 
 export {
     ByteOrder,
+    Fixed,
     Calculated,
     Dynamic,
     Embed,

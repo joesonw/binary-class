@@ -132,6 +132,10 @@ export function encodeItem(target: any, value: any, meta: Meta): Buffer {
         meta.calculated.encode(value, target);
         return undefined;
     }
+    case 'fixed': {
+        if (value !== meta.fixed.value) throw new Error(`Should be fixed value: ${meta.fixed.value}`);
+        return undefined;
+    }
     }
 }
 

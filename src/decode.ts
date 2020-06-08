@@ -100,6 +100,10 @@ export function decodeItem(target: any, buffer: Buffer, meta: Meta, offset: numb
     case 'calculated': {
         return { result: meta.calculated.decode(target), length: 0 };
     }
+    case 'fixed': {
+        if (target[meta.key] !== meta.fixed.value) throw new Error(`Should be fixed value: ${meta.fixed.value}`);
+        return undefined;
+    }
     }
 }
 
