@@ -98,8 +98,7 @@ export function decodeItem(target: any, buffer: Buffer, meta: Meta, offset: numb
         return { result, length };
     }
     case 'calculated': {
-        target[meta.key] = meta.calculated.decode(target);
-        return undefined;
+        return { result: meta.calculated.decode(target), length: 0 };
     }
     }
 }
