@@ -13,6 +13,7 @@ import {
     Double,
     Array,
     Embed,
+    Calculated,
 } from './fields';
 
 import {
@@ -24,6 +25,7 @@ import encode from './encode';
 
 export {
     ByteOrder,
+    Calculated,
     Dynamic,
     Embed,
     Array,

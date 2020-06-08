@@ -127,6 +127,10 @@ export function encodeItem(target: any, value: any, meta: Meta): Buffer {
     case 'embed': {
         return encodeWithMetas(value, meta.embed.metas); // eslint-disable-line @typescript-eslint/no-use-before-define
     }
+    case 'calculated': {
+        meta.calculated.encode(value, target);
+        return undefined;
+    }
     }
 }
 

@@ -95,6 +95,10 @@ export function decodeItem(target: any, buffer: Buffer, meta: Meta, offset: numb
         }
         return { result, length };
     }
+    case 'calculated': {
+        meta.calculated.decode(target);
+        return undefined;
+    }
     }
 }
 

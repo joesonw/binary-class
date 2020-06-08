@@ -51,6 +51,10 @@ export interface Meta { // eslint-disable-line @typescript-eslint/interface-name
         length: number;
         field: PropertyDecorator,
     };
+    calculated?: {
+        decode: (target: any) => any;
+        encode: (value: number, target: any) => void;
+    };
 }
 
 export function addMeta(target: object, newMeta: Meta): void {
@@ -64,6 +68,12 @@ export function getMeta(target: object): Meta[] {
 }
 
 export type Field = PropertyDecorator;
+
+export function Calculated(decode: (target: any) => any, encode: (value: number, target: any) => void): PropertyDecorator {
+    return (target: object, key: string | symbol): void => {
+        addMeta(target as any, { key, type: 'Calculated', calculated: { decode, encode } });
+    };
+}
 
 export function Embed(type?: any): PropertyDecorator {
     return (target: object, key: string | symbol): void => {
