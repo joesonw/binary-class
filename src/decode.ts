@@ -87,11 +87,11 @@ export function decodeItem(target: any, buffer: Buffer, meta: Meta, offset: numb
         const metas = meta.embed.metas;
         const type = meta.embed.type;
         const result = new type();
-        let length = offset;
+        let length = 0;
         for (const meta of metas) {
-            const res = decodeItem(result, buffer, meta, length);
-            length = res.length;
+            const res = decodeItem(result, buffer, meta, offset + length);
             result[meta.key] = res.result;
+            length += res.length;
         }
         return { result, length };
     }

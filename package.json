@@ -1,6 +1,6 @@
 {
   "name": "binary-class",
-  "version": "0.1.5",
+  "version": "0.1.7",
   "description": "binary encoder/decoder",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
